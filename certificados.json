@@ -4,7 +4,42 @@
   "_repositorio": "https://github.com/MIU-MODA/informes-mtto",
   "_validador": "https://miu-moda.github.io/informes-mtto/validar.html",
   "_ultima_actualizacion": "2026-05-14",
-  "certificados": [
+  "certificados": [{
+  "id": "SCH-2026-02-8KTSW46",
+  "hash": "18425194b640bcb02be6f6428cc0d36f708bbfe13ca1e9bb8f0255e50280762b",
+  "numero_certificado_visible": "10425 / 2026",
+  "fecha_emision": "2026-02-23",
+  "fecha_vencimiento": "2026-02-23",
+  "fecha_vencimiento_iso": "2026-02-23T05:10:00.000Z",
+  "vigencia": {
+    "cantidad": 10,
+    "unidad": "minutos"
+  },
+  "tipo_equipo": "Transformador de Aislamiento",
+  "cliente": "INVERSIONES URBANISTICAS OPERADORAS S.A.",
+  "direccion": "Cal. Dean Valdivia Nro. 148 Int. 1401 San Isidro – Lima.",
+  "atencion": "Ing. Carlos Huayanca",
+  "cargo": "Coordinador de Mantenimiento",
+  "sede": "APPARKA",
+  "ubicacion": "PLAYA ALFREDO SALAZAR I – SAN ISIDRO / CUARTO DE CONTROL",
+  "equipo": {
+    "marca": "ENERSAFE",
+    "modelo": "MODEL-XYZ",
+    "serie": "SN-000000",
+    "capacidad_kva": 3,
+    "fases": "1 Φ",
+    "factor_potencia": 0.9,
+    "tension_primaria": 220,
+    "tension_secundaria": 220,
+    "corriente_primaria": 13.64,
+    "corriente_secundaria": 12.27,
+    "frecuencia": "60 Hz",
+    "forma_onda": "SINUSOIDAL",
+    "temperatura_max": "40°C"
+  },
+  "responsable": "Ing. Alan Requejo Saldaña — CIP 385960",
+  "foto": null
+}
 
   ]
 }
