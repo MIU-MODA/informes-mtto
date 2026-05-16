@@ -5,12 +5,12 @@
   "_validador": "https://miu-moda.github.io/informes-mtto/validar.html",
   "_ultima_actualizacion": "2026-05-14",
   "certificados": [{
-  "id": "SCH-2026-02-8KTSW46",
-  "hash": "18425194b640bcb02be6f6428cc0d36f708bbfe13ca1e9bb8f0255e50280762b",
+  "id": "SCH-2026-05-HU6KNXL",
+  "hash": "66edd95a0b889526c544bce2fd43df405ea4b657134e0c19f2739a55c864c2ad",
   "numero_certificado_visible": "10425 / 2026",
-  "fecha_emision": "2026-02-23",
-  "fecha_vencimiento": "2026-02-23",
-  "fecha_vencimiento_iso": "2026-02-23T05:10:00.000Z",
+  "fecha_emision": "2026-05-16",
+  "fecha_vencimiento": "2026-05-16",
+  "fecha_vencimiento_iso": "2026-05-16T05:10:00.000Z",
   "vigencia": {
     "cantidad": 10,
     "unidad": "minutos"
