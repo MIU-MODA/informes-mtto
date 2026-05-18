@@ -1,9 +1,0 @@
-{
-  "_info": "Base de datos oficial de certificados de operatividad emitidos por Schneider Ingenieros S.A.C. Cualquier modificación manual rompe la integridad del sistema anti-falsificación.",
-  "_version": "1.0",
-  "_repositorio": "https://github.com/MIU-MODA/informes-mtto",
-  "_validador": "https://miu-moda.github.io/informes-mtto/validar.html",
-  "_ultima_actualizacion": "2026-05-14",
-  "certificados": [
-  ]
-}
