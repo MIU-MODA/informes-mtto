@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validación de Certificado - Schneider Ingenieros</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#7AB800;
+  --verde-osc:#2D5A00;
+  --verde-claro:#A6E000;
+  --rojo:#c43030;
+  --rojo-osc:#7a1a1a;
+  --naranja:#e08020;
+  --naranja-osc:#8a4a10;
+  --negro:#1a1a1a;
+  --gris-bg:#f4f6f8;
+  --gris-med:#666;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Barlow',sans-serif;
+  background:linear-gradient(135deg,#1a1a1a 0%,#2D5A00 100%);
+  min-height:100vh;color:#1a1a2e;
+  padding:20px 14px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.brand-header{margin-bottom:18px;text-align:center;}
+.brand-logo-img{
+  height:60px;width:auto;
+  background:white;padding:8px 16px;
+  border-radius:4px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.3);
+}
+.brand-tagline{color:rgba(255,255,255,0.7);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-top:8px;font-weight:600;}
+
+.card{
+  background:white;width:100%;max-width:540px;
+  border-radius:8px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.45);
+  border-top:6px solid var(--verde);
+  margin-bottom:14px;
+}
+
+/* BÚSQUEDA MANUAL — siempre visible arriba */
+.search-card{
+  background:white;
+  padding:18px 20px;
+  border-bottom:2px solid var(--verde);
+}
+.search-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:800;
+  color:var(--verde-osc);
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:10px;text-align:center;
+}
+.search-row{display:flex;gap:8px;}
+.search-input{
+  flex:1;
+  padding:11px 12px;
+  border:2px solid #ccc;border-radius:3px;
+  font-family:'Courier New',monospace;
+  font-size:14px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:1px;color:var(--negro);
+  outline:none;
+  background:#fafafa;
+}
+.search-input:focus{border-color:var(--verde);background:white;}
+.search-input::placeholder{color:#bbb;font-weight:400;letter-spacing:0.5px;font-size:12px;}
+.search-btn{
+  background:var(--verde);color:white;
+  border:none;border-radius:3px;
+  padding:0 18px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;
+}
+.search-btn:hover{background:var(--verde-claro);}
+.search-hint{
+  font-size:10.5px;color:#777;text-align:center;
+  margin-top:8px;font-style:italic;
+}
+
+.status-banner{padding:24px 20px;text-align:center;color:white;position:relative;}
+.status-banner.valid{background:linear-gradient(135deg,var(--verde-osc) 0%,var(--verde) 100%);}
+.status-banner.expired{background:linear-gradient(135deg,var(--naranja-osc) 0%,var(--naranja) 100%);}
+.status-banner.notfound{background:linear-gradient(135deg,var(--rojo-osc) 0%,var(--rojo) 100%);}
+.status-banner.loading{background:linear-gradient(135deg,#1a1a1a 0%,#444 100%);}
+.status-banner.idle{background:linear-gradient(135deg,#444 0%,#666 100%);}
+
+.status-icon{
+  width:72px;height:72px;border-radius:50%;background:white;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 12px;font-size:42px;font-weight:800;
+  font-family:'Barlow Condensed',sans-serif;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+}
+.status-banner.valid .status-icon{color:var(--verde-osc);}
+.status-banner.expired .status-icon{color:var(--naranja-osc);}
+.status-banner.notfound .status-icon{color:var(--rojo-osc);}
+.status-banner.loading .status-icon{color:var(--negro);animation:spin 1.4s linear infinite;}
+.status-banner.idle .status-icon{color:#666;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.status-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px;}
+.status-sub{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:0.9;font-weight:600;}
+
+.cert-data{padding:0;}
+.data-row{display:flex;align-items:stretch;border-bottom:1px solid #eee;}
+.data-label{
+  background:#f4f6f8;padding:10px 14px;
+  font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--verde-osc);
+  font-weight:700;flex:0 0 38%;
+  display:flex;align-items:center;
+  border-right:3px solid var(--verde);
+}
+.data-value{
+  padding:10px 14px;font-size:13px;font-weight:600;
+  color:var(--negro);flex:1;
+  display:flex;align-items:center;word-break:break-word;
+}
+
+.foto-section{padding:14px 18px 8px;background:#fafafa;border-bottom:1px solid #eee;}
+.foto-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;letter-spacing:3px;
+  color:var(--verde-osc);font-weight:700;
+  text-transform:uppercase;margin-bottom:6px;text-align:center;
+}
+.foto-wrapper{
+  width:100%;border:2px solid var(--verde);
+  background:white;overflow:hidden;
+  position:relative;border-radius:3px;
+}
+.foto-wrapper img{width:100%;display:block;max-height:300px;object-fit:contain;}
+.foto-badge{
+  position:absolute;top:8px;left:8px;
+  background:var(--verde-osc);color:white;
+  padding:3px 9px;font-size:9px;
+  letter-spacing:1.5px;font-weight:700;
+  border-radius:1px;text-transform:uppercase;
+}
+.foto-missing{padding:18px;text-align:center;color:#999;font-size:11px;font-style:italic;}
+
+.verify-section{padding:14px 18px;background:#fffdf0;border-top:2px solid var(--verde);border-bottom:1px solid #eee;}
+.verify-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:var(--verde-osc);font-weight:800;text-transform:uppercase;margin-bottom:6px;}
+.verify-list{margin:0;padding-left:18px;font-size:11.5px;line-height:1.55;color:#444;}
+.verify-list li{margin-bottom:3px;}
+
+.footer{background:var(--negro);color:white;padding:14px 18px;text-align:center;}
+.footer-brand{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--verde);}
+.footer-text{font-size:9.5px;letter-spacing:1.5px;color:rgba(255,255,255,0.6);margin-top:3px;text-transform:uppercase;}
+.footer-contact{font-size:10px;color:rgba(255,255,255,0.85);margin-top:6px;}
+
+.loading-msg{padding:30px 20px;text-align:center;color:#666;}
+.idle-msg{padding:24px 20px;text-align:center;color:#666;font-size:13px;line-height:1.6;}
+.idle-msg strong{color:var(--verde-osc);}
+
+.error-detail{padding:18px;font-size:13px;color:#444;line-height:1.6;text-align:center;background:#fff8f8;border-bottom:1px solid #eee;}
+.error-detail strong{color:var(--rojo-osc);}
+.error-detail ul{text-align:left;margin:10px auto;display:inline-block;font-size:12px;color:#555;line-height:1.7;padding-left:20px;}
+.error-detail ul li{margin-bottom:4px;}
+.error-detail ul li strong{color:var(--rojo-osc);}
+
+.hash-row{padding:8px 14px;background:#f8f8f8;font-family:'Courier New',monospace;font-size:9px;color:#999;border-top:1px solid #eee;letter-spacing:0.5px;text-align:center;word-break:break-all;}
+
+@media (max-width:480px){
+  .data-label{flex:0 0 42%;font-size:9.5px;padding:8px 10px;}
+  .data-value{font-size:12px;padding:8px 10px;}
+  .status-title{font-size:20px;letter-spacing:3px;}
+  body{padding:12px 6px;}
+  .brand-logo-img{height:50px;}
+  .search-row{flex-direction:column;}
+  .search-btn{padding:11px;}
+}
+</style>
+</head>
+<body>
+
+<div class="brand-header">
+  <img class="brand-logo-img" src="data:image/jpeg;base64,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" alt="Schneider Ingenieros">
+  <div class="brand-tagline">Validación de Certificados de Operatividad</div>
+</div>
+
+<div class="card" id="card">
+
+  <!-- BÚSQUEDA MANUAL (siempre visible arriba) -->
+  <div class="search-card">
+    <div class="search-title">🔍 Validar Certificado</div>
+    <div class="search-row">
+      <input type="text" class="search-input" id="manualCode" placeholder="Código (ej: SCH-2026-02-A7K3MX9)" autocomplete="off">
+      <button class="search-btn" onclick="buscarManual()">Verificar</button>
+    </div>
+    <div class="search-hint">Si escaneaste un QR, el código ya está completo. Si no, escríbelo del certificado físico.</div>
+  </div>
+
+  <!-- Estado: arranca en "idle" si no hay ID en la URL -->
+  <div class="status-banner idle" id="statusBanner">
+    <div class="status-icon" id="statusIcon">?</div>
+    <div class="status-title" id="statusTitle">Esperando código</div>
+    <div class="status-sub" id="statusSub">Ingresa el código del certificado</div>
+  </div>
+
+  <div id="contentArea">
+    <div class="idle-msg">
+      Ingresa el <strong>código único del certificado</strong> que aparece en el documento físico,<br>
+      o escanea el código QR del PDF.
+    </div>
+    <div class="footer">
+      <div class="footer-brand">Schneider Ingenieros S.A.C.</div>
+      <div class="footer-text">Ingeniería · Eléctrica · Automatización</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var CERTIFICADOS_JSON_URL = 'certificados.json';
+
+function getParam(name){
+  var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+  return m ? decodeURIComponent(m[1]) : '';
+}
+
+function setStatus(estado, titulo, sub){
+  var b = document.getElementById('statusBanner');
+  b.className = 'status-banner ' + estado;
+  document.getElementById('statusIcon').textContent =
+    estado === 'valid' ? '✓' :
+    estado === 'expired' ? '!' :
+    estado === 'notfound' ? '✕' :
+    estado === 'loading' ? '↻' : '?';
+  document.getElementById('statusTitle').textContent = titulo;
+  document.getElementById('statusSub').textContent = sub;
+}
+
+function escapeHtml(s){
+  if(s == null) return '';
+  return String(s).replace(/[&<>"\']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function formatearFecha(iso){
+  if(!iso) return '—';
+  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var p = iso.split('-');
+  if(p.length !== 3) return iso;
+  return parseInt(p[2],10) + ' de ' + meses[parseInt(p[1],10)-1] + ' del ' + p[0];
+}
+
+// Calcular días/horas faltantes (acepta fecha_vencimiento_iso con hora si está)
+function calcularTiempoRestante(cert){
+  var venc;
+  if(cert.fecha_vencimiento_iso){
+    venc = new Date(cert.fecha_vencimiento_iso);
+  } else {
+    venc = new Date(cert.fecha_vencimiento + 'T23:59:59');
+  }
+  var ahora = new Date();
+  var diff = venc - ahora;
+  var dias = Math.floor(diff / (1000*60*60*24));
+  var horas = Math.floor(diff / (1000*60*60));
+  var minutos = Math.floor(diff / (1000*60));
+  return { vigente: diff > 0, diff: diff, dias: dias, horas: horas, minutos: minutos };
+}
+
+function descripcionTiempoFaltante(t){
+  if(t.dias > 0) return t.dias + ' día(s)';
+  if(t.horas > 0) return t.horas + ' hora(s)';
+  if(t.minutos > 0) return t.minutos + ' min';
+  if(Math.abs(t.minutos) < 60) return 'hace ' + Math.abs(t.minutos) + ' min';
+  if(Math.abs(t.horas) < 48) return 'hace ' + Math.abs(t.horas) + ' h';
+  return 'hace ' + Math.abs(t.dias) + ' día(s)';
+}
+
+function buscarManual(){
+  var code = document.getElementById('manualCode').value.trim().toUpperCase();
+  if(!code){
+    setStatus('notfound', '⚠ Falta el código', 'Ingresa un código de certificado');
+    return;
+  }
+  // Reflejar en URL para compartir
+  var nuevaUrl = location.pathname + '?id=' + encodeURIComponent(code);
+  window.history.replaceState({}, '', nuevaUrl);
+  buscarCertificado(code);
+}
+
+function renderCertificado(cert){
+  var contentArea = document.getElementById('contentArea');
+  var t = calcularTiempoRestante(cert);
+
+  if(t.vigente){
+    setStatus('valid', '✓ Certificado Válido', 'Documento auténtico emitido por Schneider Ingenieros');
+  } else {
+    setStatus('expired', '⚠ Certificado Vencido', 'Vencido ' + descripcionTiempoFaltante(t) + ' — Requiere renovación');
+  }
+
+  var e = cert.equipo || {};
+  var fotoHTML = cert.foto
+    ? '<div class="foto-wrapper"><img src="' + cert.foto + '" alt="Equipo certificado"><div class="foto-badge">Foto del equipo</div></div>'
+    : '<div class="foto-missing">⚠ Este certificado no incluye foto del equipo</div>';
+
+  var colorVenc = t.vigente ? 'var(--verde-osc)' : 'var(--rojo-osc)';
+  var textoVenc = t.vigente ? ' · ' + descripcionTiempoFaltante(t) + ' restantes' : ' · VENCIDO';
+
+  var html =
+    '<div class="foto-section">' +
+      '<div class="foto-label">Evidencia visual del equipo</div>' +
+      fotoHTML +
+    '</div>' +
+    '<div class="cert-data">' +
+      '<div class="data-row"><div class="data-label">Código Único</div><div class="data-value" style="font-family:\'Courier New\',monospace;letter-spacing:1px;color:var(--verde-osc);font-weight:700;">' + escapeHtml(cert.id) + '</div></div>' +
+      (cert.numero_certificado_visible ? '<div class="data-row"><div class="data-label">N° Certificado</div><div class="data-value">' + escapeHtml(cert.numero_certificado_visible) + '</div></div>' : '') +
+      '<div class="data-row"><div class="data-label">Tipo de Equipo</div><div class="data-value">' + escapeHtml(cert.tipo_equipo || 'Transformador de Aislamiento') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Marca</div><div class="data-value">' + escapeHtml(e.marca || '—') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Modelo</div><div class="data-value">' + escapeHtml(e.modelo || '—') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">N° de Serie</div><div class="data-value" style="font-family:\'Courier New\',monospace;">' + escapeHtml(e.serie || '—') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Capacidad</div><div class="data-value">' + escapeHtml((e.capacidad_kva || 0) + ' KVA') + ' · ' + escapeHtml(e.fases || '—') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Tensiones</div><div class="data-value">Prim: ' + escapeHtml(e.tension_primaria || '—') + 'V · Sec: ' + escapeHtml(e.tension_secundaria || '—') + 'V</div></div>' +
+      '<div class="data-row"><div class="data-label">Corrientes</div><div class="data-value">Prim: ' + escapeHtml(e.corriente_primaria || '—') + 'A · Sec: ' + escapeHtml(e.corriente_secundaria || '—') + 'A</div></div>' +
+      '<div class="data-row"><div class="data-label">Cliente</div><div class="data-value">' + escapeHtml(cert.cliente) + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Sede</div><div class="data-value">' + escapeHtml(cert.sede || '—') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Ubicación</div><div class="data-value" style="font-size:11.5px;">' + escapeHtml(cert.ubicacion || '—') + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Fecha de Emisión</div><div class="data-value">' + formatearFecha(cert.fecha_emision) + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Vencimiento</div><div class="data-value" style="color:' + colorVenc + ';font-weight:700;">' + formatearFecha(cert.fecha_vencimiento) + textoVenc + '</div></div>' +
+      '<div class="data-row"><div class="data-label">Responsable</div><div class="data-value" style="font-size:11.5px;">' + escapeHtml(cert.responsable || 'Ing. Alan Requejo Saldaña — CIP 385960') + '</div></div>' +
+    '</div>' +
+    '<div class="verify-section">' +
+      '<div class="verify-title">⚠ Verificación manual</div>' +
+      '<ol class="verify-list">' +
+        '<li>Confirma que la <strong>foto del equipo</strong> coincide con el equipo físico instalado.</li>' +
+        '<li>Verifica que el <strong>N° de serie</strong> mostrado arriba coincida con la placa del equipo.</li>' +
+        '<li>Comprueba que esta URL empieza con <code style="background:white;padding:1px 4px;border-radius:2px;font-size:11px;border:1px solid #ddd;">' + escapeHtml(location.host) + '</code></li>' +
+      '</ol>' +
+    '</div>' +
+    '<div class="hash-row">Firma digital: ' + escapeHtml(cert.hash || 'n/a') + '</div>' +
+    '<div class="footer">' +
+      '<div class="footer-brand">Schneider Ingenieros S.A.C.</div>' +
+      '<div class="footer-text">Ingeniería · Eléctrica · Automatización</div>' +
+      '<div class="footer-contact">www.schneiderperu.com · arequejo@schneiderperu.com</div>' +
+    '</div>';
+
+  contentArea.innerHTML = html;
+}
+
+function renderNoEncontrado(idBuscado){
+  setStatus('notfound', '✕ Certificado NO Válido', 'Este código no existe en nuestra base oficial');
+  var contentArea = document.getElementById('contentArea');
+  contentArea.innerHTML =
+    '<div class="error-detail">' +
+      'El código <strong style="font-family:\'Courier New\',monospace;background:#fff0f0;padding:2px 6px;border-radius:2px;">' + escapeHtml(idBuscado || 'sin código') + '</strong>' +
+      '<br><br><strong>NO se encuentra registrado</strong> en nuestra base de datos oficial.<br><br>' +
+      'Esto puede significar que:' +
+      '<ul>' +
+        '<li>El certificado fue <strong>adulterado o falsificado</strong></li>' +
+        '<li>El certificado <strong>caducó hace más de 6 meses</strong> y fue retirado de la base activa</li>' +
+        '<li>El certificado fue <strong>invalidado por Schneider Ingenieros</strong></li>' +
+        '<li>El código fue mal escrito o el QR mal escaneado</li>' +
+      '</ul>' +
+      '<br>Para confirmar la autenticidad, contacta a:<br><br>' +
+      '<strong>Schneider Ingenieros S.A.C.</strong><br>' +
+      '📧 arequejo@schneiderperu.com<br>' +
+      '📞 +51 926 728 630' +
+    '</div>' +
+    '<div class="footer">' +
+      '<div class="footer-brand">Schneider Ingenieros S.A.C.</div>' +
+      '<div class="footer-text">Ingeniería · Eléctrica · Automatización</div>' +
+    '</div>';
+}
+
+function renderError(msg){
+  setStatus('notfound', '✕ Error', 'No pudimos consultar la base oficial');
+  document.getElementById('contentArea').innerHTML =
+    '<div class="error-detail">' + escapeHtml(msg) + '<br><br>' +
+    '<small>Si el problema persiste, contacta a <strong>arequejo@schneiderperu.com</strong></small></div>' +
+    '<div class="footer"><div class="footer-brand">Schneider Ingenieros S.A.C.</div>' +
+    '<div class="footer-text">Ingeniería · Eléctrica · Automatización</div></div>';
+}
+
+async function buscarCertificado(id){
+  setStatus('loading', 'Verificando...', 'Consultando base de datos');
+  document.getElementById('contentArea').innerHTML = '<div class="loading-msg">Validando autenticidad del certificado...</div>';
+  try {
+    var resp = await fetch(CERTIFICADOS_JSON_URL + '?t=' + Date.now(), {cache:'no-store'});
+    if(!resp.ok){ renderError('No se pudo consultar la base de datos (HTTP ' + resp.status + ')'); return; }
+    var data = await resp.json();
+    var certs = (data && Array.isArray(data.certificados)) ? data.certificados : [];
+    var cert = certs.find(function(c){ return c.id === id; });
+    if(!cert){ renderNoEncontrado(id); return; }
+    renderCertificado(cert);
+  } catch(err){
+    console.error(err);
+    renderError('Error técnico: ' + (err.message || 'desconocido'));
+  }
+}
+
+// Listener para Enter en el input
+document.getElementById('manualCode').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') buscarManual();
+});
+
+// Auto-mayúsculas mientras escribe
+document.getElementById('manualCode').addEventListener('input', function(e){
+  e.target.value = e.target.value.toUpperCase();
+});
+
+// Init: si llega ?id=... lo precarga y busca
+(function init(){
+  var id = getParam('id');
+  if(id){
+    document.getElementById('manualCode').value = id;
+    buscarCertificado(id);
+  }
+  // Si no hay id, queda en estado "idle" esperando que el usuario escriba
+})();
+</script>
+
+</body>
+</html>
