@@ -4,7 +4,26 @@
   "_repositorio": "https://github.com/MIU-MODA/informes-mtto",
   "_validador": "https://miu-moda.github.io/informes-mtto/validar.html",
   "_ultima_actualizacion": "2026-05-14",
-  "certificados": [
+  "certificados": [{
+  "id": "SCH-PT-2026-05-EAFR9VV",
+  "hash": "29a4e0edeae8fa70125386f78b64d96b3d2e91a51c3675150808b9b5afaf01ad",
+  "numero_certificado_visible": " / ",
+  "fecha_emision": "2026-05-29",
+  "fecha_vencimiento": "2027-05-29",
+  "fecha_vencimiento_iso": "2027-05-29T05:00:00.000Z",
+  "vigencia": {
+    "cantidad": 12,
+    "unidad": "meses"
+  },
+  "tipo_equipo": "Sistema de Puesta a Tierra",
+  "cliente": "",
+  "sede": "",
+  "ubicacion": "",
+  "equipo": {
+    "marca": "FLUKE",
+    "modelo": "1630-2 FC",
+    "serie": ""
+  }
 
   ]
 }
